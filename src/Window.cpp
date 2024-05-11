@@ -3,15 +3,12 @@
 //
 
 #include "Window.h"
-#include "Logging.h"
-#include "nodes/InputNode.h"
 #include "nodes/AndNode.h"
 
 CWindow::CWindow() : imNodeFlow(std::make_shared<ImFlow::ImNodeFlow>("Main Grid")) {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMEPAD) != 0) {
         throw std::runtime_error("Could not initialize SDL3");
     }
-    DEBUG("SDL Init successful");
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
@@ -27,23 +24,19 @@ CWindow::CWindow() : imNodeFlow(std::make_shared<ImFlow::ImNodeFlow>("Main Grid"
     if (window == nullptr) {
         throw std::runtime_error("Could not create a SDL3 Window");
     }
-    DEBUG("Create SDL Window");
 
     context = SDL_GL_CreateContext(window);
     if (context == nullptr) {
         throw std::runtime_error("Could not create a OpenGL Context");
     }
     SDL_GL_MakeCurrent(window, context);
-    DEBUG("Created OpenGL Context");
 
     SDL_GL_SetSwapInterval(1);
-    DEBUG("Enabled VSync");
 
     int gl_version = gladLoadGL(SDL_GL_GetProcAddress);
     if (gl_version == 0) {
         throw std::runtime_error("Could not initialize OpenGL context");
     }
-    INFO("Successfully loaded OpenGL {}.{}", GLAD_VERSION_MAJOR(gl_version), GLAD_VERSION_MINOR(gl_version));
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -67,14 +60,9 @@ CWindow::CWindow() : imNodeFlow(std::make_shared<ImFlow::ImNodeFlow>("Main Grid"
     ImGui_ImplSDL3_InitForOpenGL(window,context);
     ImGui_ImplOpenGL3_Init();
 
-    variables.emplace_back("A");
-    variables.emplace_back("B");
-
-    variables.emplace_back("C");
-    currentTruthTable = std::make_shared<CTruthTable>(variables);
 
 
-    imNodeFlow->addNode<CInputNode>(ImVec2{2, 2}, currentTruthTable, currentRow);
+    imNodeFlow->addNode<CAndNode>(ImVec2{2, 2});
 
     imNodeFlow->droppedLinkPopUpContent([this](ImFlow::Pin *pin) {
 
@@ -100,18 +88,15 @@ CWindow::~CWindow() {
 
 void CWindow::run() {
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    INFO("Starting into main loop");
     while(running) {
         for(SDL_Event event; SDL_PollEvent(&event);) {
             ImGui_ImplSDL3_ProcessEvent(&event);
             switch (event.type) {
                 case SDL_EVENT_QUIT:
-                    INFO("Received user quit, exiting");
                     running = false;
                     return;
                 case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
                     if (event.window.windowID == SDL_GetWindowID(window)) {
-                        INFO("Received user quit, exiting");
                         running = false;
                         return;
                     }
