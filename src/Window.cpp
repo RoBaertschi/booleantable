@@ -79,7 +79,7 @@ CWindow::CWindow() : imNodeFlow(std::make_shared<ImFlow::ImNodeFlow>("Main Grid"
     imNodeFlow->droppedLinkPopUpContent([this](ImFlow::Pin *pin) {
 
         if (ImGui::Button("And")) {
-            auto node = this->imNodeFlow->addNode<CAndNode>(this->imNodeFlow->screen2grid(ImGui::GetMousePos()));
+            auto node = this->imNodeFlow->placeNode<CAndNode>();
             pin->createLink(node->first.get());
         }
     });
