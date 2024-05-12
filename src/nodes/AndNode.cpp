@@ -6,10 +6,10 @@
 
 CAndNode::CAndNode() {
     setTitle("And");
-    first = addIN<bool>("First", false, ImFlow::ConnectionFilter::SameType());
-    second = addIN<bool>("Second", false, ImFlow::ConnectionFilter::SameType());
+    addIN_uid<bool>(first, "First", false, ImFlow::ConnectionFilter::SameType());
+    addIN_uid<bool>(second, "Second", false, ImFlow::ConnectionFilter::SameType());
 
     addOUT<bool>("Out", ImFlow::PinStyle::red())->behaviour([this] {
-        return first.get() && second.get();
+        return getInVal<bool>(first) && getInVal<bool>(second);
     });
 }
