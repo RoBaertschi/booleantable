@@ -9,8 +9,8 @@
 
 class CAndNode : public ImFlow::BaseNode {
 public:
-    std::shared_ptr<ImFlow::InPin<bool>> first;
-    std::shared_ptr<ImFlow::InPin<bool>> second;
+    int first = 0;
+    int second = 1;
     CAndNode();
 
 };

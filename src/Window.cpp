@@ -80,7 +80,7 @@ CWindow::CWindow() : imNodeFlow(std::make_shared<ImFlow::ImNodeFlow>("Main Grid"
 
         if (ImGui::Button("And")) {
             auto node = this->imNodeFlow->placeNode<CAndNode>();
-            pin->createLink(node->first.get());
+            pin->createLink(node->inPin(node->first));
         }
     });
 }
