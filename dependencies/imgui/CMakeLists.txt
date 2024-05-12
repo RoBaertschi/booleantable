@@ -3,7 +3,7 @@ message(STATUS "Fetching imgui...")
 FetchContent_Declare(
         imgui
         GIT_REPOSITORY https://github.com/ocornut/imgui
-        GIT_TAG v1.90.5-docking
+        GIT_TAG v1.90.5
 )
 
 FetchContent_MakeAvailable(imgui)
